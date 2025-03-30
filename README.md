@@ -1,1 +1,73 @@
-# wsl_ollama
+# Running Ollama in Windows 11 with WSL2 on an NVIDIA GPU
+
+## BIOS/UEFI VM Features enabled
+- SVM for AMD
+- Intel Virtualization Technology or VT-d for Intel
+  
+## Windows Features
+- Search for Turn Windows Features on or off in Windows Search
+- Enable Virtual Machine Platform and Windows Subsystem for Linux
+
+## NVIDIA Drivers
+- Make sure latest NVIDIA Drivers are installed, currently using Game-Ready drivers
+  - https://www.nvidia.com/en-us/geforce/drivers/
+- Can install with Display Driver Uninstaller
+  - https://www.wagnardsoft.com/display-driver-uninstaller-DDU-
+- Make sure other branded GPUs are disabled with Windows Device Manager or disabled in UEFI/BIOS, and drivers are not installed for them
+- In my situation the CPU was the 9950X3D with the Radeon IGP, disabled in Windows Device Manager
+
+## Powershell and WSL2
+- Start Powershell as admin
+- Install Ubuntu on WSL2
+  - `wsl -- install -d ubuntu`
+- Verify it is installed with WSL2
+  - `wsl -l -v`
+
+## Ubuntu NVIDIA Setup
+- Search for Ubuntu app, should be installed in Start Menu
+- Opens up terminal for Ubuntu
+- `sudo apt-get update && sudo apt-get upgrade`
+- Verify NVIDIA drivers are installed and Ubuntu recognizes the GPU
+  - `nvidia-smi`
+- Install NVIDIA CUDA Toolkit
+  - Follow instructions at https://developer.nvidia.com/cuda-downloads
+  - I ended up with https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=WSL-Ubuntu&target_version=2.0&target_type=deb_local
+  - Follow installation instructions
+  - Add to bashrc
+    - ```
+      export CUDA_HOME=/usr/local/cuda
+      export PATH=$CUDA_HOME/bin:$PATH
+      export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+      source ~/.bashrc
+      ```
+  - `nvcc --version` to verify
+
+## Ollama Setup and Run
+- Ollama setup
+  - `curl https://ollama.ai/install.sh | sh`
+- Ollama run model
+  - Can browse model names here: https://ollama.com/library
+  - `ollama run <model name>` e.g. `deepseek-r1:32b`
+- Serve Ollama for network access
+  - `OLLAMA_HOST=0.0.0.0:11434 ollama serve`
+ 
+## Network Communication with Ollama
+- `ipconfig` in PowerShell or Terminal in Windows
+  - Look for IPv4 Address of something like `192.168.x.x` - IP Address of host machine in network
+- On other machine, run `curl http://192.168.x.x:11434/api/tags`
+  - Should successfully give models currently deployed in Ollama
+
+## Open WebUI
+- Front end like ChatGPT to use the LLM: https://github.com/open-webui/open-webui
+- Docker installed on other machine that can contact Ollama server
+- Current Docker command to get Open WebUI container running
+  - ```
+    docker run -d \
+    -p 3000:8080 \
+    -e OLLAMA_BASE_URL=http://192.168.x.x:11434 \
+    -v open-webui:/app/backend/data \ 
+    --name open-webui \
+    --restart always \
+    ghcr.io/open-webui/open-webui:main
+    ```
+- `localhost:3000` or ip of this machine at port 3000 for other machines on the network to access
