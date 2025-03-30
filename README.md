@@ -73,10 +73,16 @@
 - `localhost:3000` or ip of this machine at port 3000 for other machines on the network to access
 
 ## Turn off Ollama
-- `ollama serve` - `CTRL+C` to exist
+- `ollama serve` - `CTRL+C` to exit
 - `ollama run` - `/bye` the model or `CTRL+C`
 - Ollama could be running as a `systemd` service that restarts it if it is closed
   - `sudo systemctl stop ollama`
   - `sudo systemctl disable ollama`
 - Exiting Ubuntu terminal should stop the VM if no processes are running
-- `wsl -l -v` to make sure Ubuntu is in Stopped state
+- `wsl -l -v` in Powershell to make sure Ubuntu is in Stopped state
+
+
+## MCP Testing
+- `pip install mcp` with Python version specified
+- `python mcp_server.py` to start MCP Server
+- `python mcp_client.py` to run MCP client to test the server
