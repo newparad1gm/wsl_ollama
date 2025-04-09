@@ -45,11 +45,15 @@
 ## Ollama Setup and Run
 - Ollama setup
   - `curl https://ollama.ai/install.sh | sh`
+- Serve Ollama for network access
+  - `OLLAMA_HOST=0.0.0.0:11434 ollama serve`
+- May need to turn off Ollama first
+  - `sudo lsof -i :11434`
+  - `kill -9 <PID>`
+  - If Ollama comes back up by itself, means systemd is keeping it up
 - Ollama run model
   - Can browse model names here: https://ollama.com/library
   - `ollama run <model name>` e.g. `deepseek-r1:32b`
-- Serve Ollama for network access
-  - `OLLAMA_HOST=0.0.0.0:11434 ollama serve`
  
 ## Network Communication with Ollama
 - `ipconfig` in PowerShell or Terminal in Windows
@@ -62,13 +66,7 @@
 - Docker installed on other machine that can contact Ollama server
 - Current Docker command to get Open WebUI container running
   - ```
-    docker run -d \
-    -p 3000:8080 \
-    -e OLLAMA_BASE_URL=http://192.168.x.x:11434 \
-    -v open-webui:/app/backend/data \ 
-    --name open-webui \
-    --restart always \
-    ghcr.io/open-webui/open-webui:main
+    docker run -d -p 3000:8080 -e OLLAMA_BASE_URL=http://192.168.0.167:11434 -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main
     ```
 - `localhost:3000` or ip of this machine at port 3000 for other machines on the network to access
 
