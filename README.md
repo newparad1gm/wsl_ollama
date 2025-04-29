@@ -64,9 +64,11 @@
 ## Open WebUI
 - Front end like ChatGPT to use the LLM: https://github.com/open-webui/open-webui
 - Docker installed on other machine that can contact Ollama server
+- Pull latest Open WebUI image
+  - `docker pull ghcr.io/open-webui/open-webui:main`
 - Current Docker command to get Open WebUI container running
   - ```
-    docker run -d -p 3000:8080 -e OLLAMA_BASE_URL=http://192.168.0.167:11434 -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main
+    docker run -d -p 3000:8080 -e OLLAMA_BASE_URL=http://192.168.x.x:11434 -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main
     ```
 - `localhost:3000` or ip of this machine at port 3000 for other machines on the network to access
 
@@ -84,3 +86,19 @@
 - `pip install mcp` with Python version specified
 - `python mcp_server.py` to start MCP Server
 - `python mcp_client.py` to run MCP client to test the server
+
+## Continue.dev VSCode Integration
+- Install Continue.dev plugin for VSCode
+- Open `config.yaml` in `~/.continue` (or wherever this yaml file is, can open with `Ctrl+Shift+P` -> `Continue: Open Settings`)
+- In models section of yml
+  - ```
+    models:
+      - name: Qwen3 32B
+        provider: ollama
+        model: qwen3:32b (name of model deployed)
+        roles:
+          - chat
+          - edit
+          - apply
+        apiBase: http://192.168.x.x:11434
+    ```
