@@ -19,7 +19,7 @@
 ## Powershell and WSL2
 - Start Powershell as admin
 - Install Ubuntu on WSL2
-  - `wsl -- install -d ubuntu`
+  - `wsl --install -d ubuntu`
 - Verify it is installed with WSL2
   - `wsl -l -v`
 
