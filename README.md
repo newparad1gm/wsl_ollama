@@ -33,12 +33,11 @@
   - Follow instructions at https://developer.nvidia.com/cuda-downloads
   - I ended up with https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=WSL-Ubuntu&target_version=2.0&target_type=deb_local
   - Follow installation instructions
-  - Add to bashrc
+  - Add to bashrc and profile, can do with `vim ~/.profile`
     - ```
       export CUDA_HOME=/usr/local/cuda
       export PATH=$CUDA_HOME/bin:$PATH
       export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
-      source ~/.bashrc
       ```
   - `nvcc --version` to verify
 
